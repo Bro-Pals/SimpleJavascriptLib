@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Testing our library</title>
+</head>
+
+<body onload="derp()">
+
+<canvas width="400" height="400" id="joe">
+	There should be a canvas here
+</canvas>
+
+<script src="../SimpleLibrary/setup.js"></script>
+
+<script>
+
+function derp() {
+	setCanvasInfo("joe", 400, 400, "2d");
+	
+	drawBox(10, 10, 50, 50, "#000000");
+}
+
+</script>
+
+</body>
+
+</html>

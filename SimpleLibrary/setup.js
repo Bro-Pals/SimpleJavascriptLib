@@ -7,11 +7,10 @@ var canvasSizeX, canvasSizeY;
 // set all the information for the canvas. Do this first!
 function setCanvasInfo(id, sizeX, sizeY, canvasContextType)
 {
-	canvasID = id;
 	canvasSizeX = sizeX;
 	canvasSizeY = sizeY;
-	canvasReference = document.getElementById(canvasID);
-	canvasContext = canvasReference.getContext();
+	canvasReference = document.getElementById(id);
+	canvasContext = canvasReference.getContext(canvasContextType);
 }
 
 // draw a simple box onto the canvas
