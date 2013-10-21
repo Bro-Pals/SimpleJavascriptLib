@@ -6,18 +6,26 @@
 
 <body onload="derp()">
 
-<canvas width="400" height="400" id="joe">
+<canvas width="600" height="400" id="joe">
 	There should be a canvas here
 </canvas>
+
+<p id="imageAppender"></p>
 
 <script src="../SimpleLibrary/setup.js"></script>
 
 <script>
 
 function derp() {
-	setCanvasInfo("joe", 400, 400, "2d");
+	setCanvasInfo("joe", 600, 400, "2d");
+	loadImage("blah", "bird.jpg");
+	drawImage("blah", 0,0);
 	
-	drawBox(10, 10, 50, 50, "#000000");
+	connectKeyEvent(keyCodeFor.J, eep());
+}
+
+function eep() {
+	alert("Eepers");
 }
 
 </script>
