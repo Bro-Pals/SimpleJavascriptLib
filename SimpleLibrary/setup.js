@@ -93,7 +93,7 @@ function pressKey(et) {
 	}
 }
 
-function assignKeyEvent(theKeyCode, functionAssigned) {
+function connectKeyEvent(theKeyCode, functionAssigned) {
 	var lastIndex = connectedKeyEvents.length
 	connectedKeyEvents[lastIndex] = [theKeyCode, functionAssigned];
 }
