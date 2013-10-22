@@ -25,21 +25,25 @@
 <script>
 
 var testBlock;
+var block2;
 
 // the first method ran
 function derp() {
 	setCanvasInfo("joe", 640, 480, "2d");
 	
-	testBlock = new Block(100, 400, 40, 40);
-	testBlock.setAcceleration(0, 0.5);
-	testBlock.setVelocity(4, -20);
-	setInterval(loopMe, 10);
+	testBlock = new Block(100, 200, 40, 40);
+	block2 = new Block(80, 120, 50, 50);
+	
+	block2.setAcceleration(0, 1);
+	
+	setInterval(loopMe, 50);
 }
 
 function loopMe() {
 	fillBackground("#FFFFFF");
-	drawBlock(testBlock, "#FF0000");
-	testBlock.update();
+	drawBlock(testBlock, "#000000");
+	drawBlock(block2, "#333333");
+	updateBlocks();
 }
 
 // event listeners
