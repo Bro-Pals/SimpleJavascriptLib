@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title> Testing our library</title>
+	<title> Testing our library</title>	
+
+<style>
+	img
+	{
+	visibility:hidden;
+	}
+</style>
+
 </head>
 
 <body onload="derp()">
 
-<canvas width="400" height="400" id="joe">
+<p id="imageAppender"></p>
+
+<canvas width="600" height="400" id="joe">
 	There should be a canvas here
 </canvas>
 
@@ -15,9 +25,12 @@
 <script>
 
 function derp() {
-	setCanvasInfo("joe", 400, 400, "2d");
+	alert("This dumb thing actually ran! :o");
+	setCanvasInfo("joe", 600, 400, "2d");
+	loadImage("blah", "bird.jpg");
+	drawImage("blah", 0,0);
 	
-	drawBox(10, 10, 50, 50, "#000000");
+	connectKeyEvent(keyCodeRef.G, eep);
 }
 
 </script>
