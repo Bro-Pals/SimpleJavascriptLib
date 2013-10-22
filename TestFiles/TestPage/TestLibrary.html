@@ -2,9 +2,12 @@
 <html>
 <head>
 	<title> Testing our library</title>
+		
+<script src="../../SimpleLibrary/setup.js"></script>	
+	
 </head>
 
-<body onload="derp()">
+<body>
 
 <canvas width="600" height="400" id="joe">
 	There should be a canvas here
@@ -12,11 +15,22 @@
 
 <p id="imageAppender"></p>
 
-<script src="../../SimpleLibrary/setup.js"></script>
-<script src="../../SimpleLibrary/events/keyEvent.js"></script>
+<script>
 
-<script src="main.js"></script>
+function derp() {
+	loadImage("blah", "bird.jpg");
+	setCanvasInfo("joe", 600, 400, "2d");
+	drawImage("blah", 0,0);
+	
+	connectKeyEvent(keyCodeRef.G, eep);
+}
 
-</body>
+function eep() {
+	alert("Eepers");
+}
+
+</script>
+
+</body onload="derp()">
 
 </html>
