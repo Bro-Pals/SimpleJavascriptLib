@@ -24,16 +24,23 @@
 
 <script>
 
+var testBlock;
+
 // the first method ran
 function derp() {
-	setCanvasInfo("joe", 400, 400, "2d");
-	loadImage("dog", "bird.jpg");
-	drawImage("dog", 0,0);
-	drawBox(10, 10, 50, 50, "#000000");
+	setCanvasInfo("joe", 640, 480, "2d");
 	
+	testBlock = new Block(100, 400, 40, 40);
+	testBlock.setAcceleration(0, 0.5);
+	testBlock.setVelocity(4, -20);
+	setInterval(loopMe, 10);
 }
 
-
+function loopMe() {
+	fillBackground("#FFFFFF");
+	drawBlock(testBlock, "#FF0000");
+	testBlock.update();
+}
 
 // event listeners
 document.addEventListener('keydown',pressKey,false);

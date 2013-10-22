@@ -18,6 +18,18 @@ function drawBox(x, y, sizeX, sizeY, color) {
 	canvasContext.fillRect(x, y, sizeX, sizeY);
 }
 
+// draw a Block object (from physics.js)
+function drawBlock(blockObject, color) {
+	drawBox(blockObject.x, blockObject.y, 
+			blockObject.width, blockObject.height,
+			color);
+}
+
+// fill the background of the canvas with a color
+function fillBackground(color) {
+	drawBox(0, 0, canvasSizeX, canvasSizeY, color);
+}
+
 function drawImage(id, x, y) {
 	var img=document.getElementById(id);
 	canvasContext.drawImage(img,x,y);
