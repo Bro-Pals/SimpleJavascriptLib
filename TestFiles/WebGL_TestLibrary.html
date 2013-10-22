@@ -2,21 +2,31 @@
 <html>
 <head>
 	<title> Testing our library</title>
+	<meta charset="UTF-8">
+	<style>
+	canvas
+	{
+	border: 1px solid black;
+	}
+	</style>
 </head>
 
 <body onload="derp()">
+
+<p id="pp"></p> 
 
 <canvas width="640" height="480" id="WebGLCanvas">
 	There should be a canvas here
 </canvas>
 
-<script src="../SimpleLibrary/WebGL_SimpleLibrary/setup_webgl.js"></script>
+<script src="../SimpleLibrary/WebGL_SimpleLibrary/webGL_SimpleLibrary.js"></script>
+<script src="../SimpleLibrary/WebGL_SimpleLibrary/tester_webgl.js"></script>
 
 <script>
 
 function derp() {
 		init3DCanvas("WebGLCanvas");
-		//alert("Alert!");
+		go();
 }
 
 </script>
