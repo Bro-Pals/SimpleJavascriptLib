@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title> Testing our library</title>
-		
-<script src="../../SimpleLibrary/setup.js"></script>	
-	
+	<title> Testing our library</title>	
+
+<style>
+	img
+	{
+	visibility:hidden;
+	}
+</style>
+
 </head>
 
-<body>
+<body onload="derp()">
+
+<p id="imageAppender"></p>
 
 <canvas width="600" height="400" id="joe">
 	There should be a canvas here
 </canvas>
 
-<p id="imageAppender"></p>
+<script src="../SimpleLibrary/setup.js"></script>
 
 <script>
 
 function derp() {
-	loadImage("blah", "bird.jpg");
+	alert("This dumb thing actually ran! :o");
 	setCanvasInfo("joe", 600, 400, "2d");
+	loadImage("blah", "bird.jpg");
 	drawImage("blah", 0,0);
 	
 	connectKeyEvent(keyCodeRef.G, eep);
 }
 
-function eep() {
-	alert("Eepers");
-}
-
 </script>
 
-</body onload="derp()">
+</body>
 
 </html>
