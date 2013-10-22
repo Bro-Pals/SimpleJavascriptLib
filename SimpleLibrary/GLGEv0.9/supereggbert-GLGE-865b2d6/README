@@ -16,9 +16,14 @@ GLGE is made available under a BSD (3-point) style license
 BUILDING GLGE
 
 GLGE requires nodejs, to build simply:
+
 > git submodule init
+
 > git submodule update
+
 > ./build.js
+
+
 
 For more options:
 > ./build.js --help
