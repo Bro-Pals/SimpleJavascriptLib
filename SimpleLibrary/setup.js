@@ -4,6 +4,17 @@ var canvasContext;
 var canvasReference;
 var canvasSizeX, canvasSizeY;
 
+//Import a javascript (Taken from http://stackoverflow.com/questions/21294/dynamically-load-a-javascript-file-think-of-include-in-c)
+function include(url)
+{
+	var s = document.createElement("script");
+	s.setAttribute("type", "text/javascript");
+	s.setAttribute("src", url);
+	var nodes = document.getElementsByTagName("*");
+	var node = nodes[nodes.length -1].parentNode;
+	node.appendChild(s);
+}
+
 // set all the information for the canvas. Do this first!
 function setCanvasInfo(id, sizeX, sizeY, canvasContextType) {
 	canvasSizeX = sizeX;

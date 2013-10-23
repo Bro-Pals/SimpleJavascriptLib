@@ -19,19 +19,12 @@
 
 <p id="ImageAppender"></p>
 
-<script src="../SimpleLibrary/setup.js"></script>
+<script src="../SimpleLibrary/SimpleGraphics/simple_graphics.js"></script>
 
 <script>
 
 function derp() {
-	setCanvasInfo("joe", 400, 400, "2d");
-	loadImage("dog", "hund.jpg");
-	drawImage("dog", 0,0);
-	drawBox(10, 10, 50, 50, "#000000");
-}
-
-function eep() {
-	alert("lbah");
+	init2DGraphics('joe');
 }
 
 document.addEventListener('keydown',pressKey,false);
