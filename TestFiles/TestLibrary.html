@@ -19,14 +19,42 @@
 
 <p id="ImageAppender"></p>
 
+<<<<<<< HEAD
 <script src="../SimpleLibrary/SimpleGraphics/simple_graphics.js"></script>
+=======
+<script src="../SimpleLibrary/setup.js"></script>
+<script src="../SimpleLibrary/physics.js"></script>
+>>>>>>> 3d221fea660f17c48c1f876196c062af646dbb28
 
 <script>
 
+var testBlock;
+var block2;
+
+// the first method ran
 function derp() {
+<<<<<<< HEAD
 	init2DGraphics('joe');
+=======
+	setCanvasInfo("joe", 640, 480, "2d");
+	
+	testBlock = new Block(100, 200, 40, 40);
+	block2 = new Block(80, 120, 50, 50);
+	
+	block2.setAcceleration(0, 1);
+	
+	setInterval(loopMe, 50);
 }
 
+function loopMe() {
+	fillBackground("#FFFFFF");
+	drawBlock(testBlock, "#000000");
+	drawBlock(block2, "#333333");
+	updateBlocks();
+>>>>>>> 3d221fea660f17c48c1f876196c062af646dbb28
+}
+
+// event listeners
 document.addEventListener('keydown',pressKey,false);
 
 </script>
