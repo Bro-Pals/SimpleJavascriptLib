@@ -22,10 +22,18 @@ function Block(_x, _y, _width, _height) {
 	this.y = _y;
 	this.width = _width;
 	this.height = _height;
+	this.falling = false;
 	
 	// [x, y] velocity and acceleration
 	this.velocity = [0, 0];
 	this.acceleration = [0, 0];
+	
+	// set the block's x and y values
+	this.setLocation=setLocation;
+	function setLocation(_x, _y) {
+		this.x = _x;
+		this.y = _y;
+	}
 	
 	// set the velocity values
 	this.setVelocity=setVelocity;
@@ -45,8 +53,11 @@ function Block(_x, _y, _width, _height) {
 	// Later: Make it check for collisions
 	this.update=update;
 	function update() {
-		// check for collisions with other blocks
+		if (!falling) {
+			return;
+		}
 		
+		// check for collisions with other blocks
 		for (var i=0; i<blockArray.length; i++) {
 			if (blockArray[i]!=this) {
 				// check the X axis
