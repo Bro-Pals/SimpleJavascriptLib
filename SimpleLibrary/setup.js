@@ -58,6 +58,18 @@ function loadImage(imageID, imageSource) {
 	document.getElementById("ImageAppender").appendChild(newImg);
 }
 
+// taken from the internet! http://stackoverflow.com/questions/10754661/javascript-getting-imagedata-without-canvas
+function getImageDataArray(imageID, imgWidth, imgHeight) {
+	var tempCanvas = document.createElement("canvas");
+	var context = tempCanvas.getContext("2d");
+	var img = document.getElementById(imageID);
+	context.drawImage(img, 0, 0);
+	try {
+	var imgData = context.getImageData(0, 0, imgWidth, imgHeight);
+	} catch(err) { alert(err); }
+	return imgData;
+}
+
 function drawText(txt,font,color, x,y) {
 	canvasContext.font=font;
 	canvasContext.strokeStyle=color;
