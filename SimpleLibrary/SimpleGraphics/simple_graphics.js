@@ -106,13 +106,3 @@ function SimpleGraphics(canvas) //Pass it a reference to the 2D HTML5 Canvas!
 		this.fillRectangle(0, 0, this.buffer.width, this.buffer.height, color);
 	}
 }
-
-function init2DGraphics(canvasID)
-{
-	var simpleGraphics = new SimpleGraphics(document.getElementById(canvasID));
-	var color = new Color(100, 100, 100, 255);
-	
-	simpleGraphics.setCanvasSize(320, 240);
-	simpleGraphics.fillBackground(color);
-	simpleGraphics.drawBuffer();
-}
