@@ -72,7 +72,7 @@ function getImageDataArray(imageID, imgWidth, imgHeight) {
 
 function drawText(txt,font,color, x,y) {
 	canvasContext.font=font;
-	canvasContext.strokeStyle=color;
+	canvasContext.fillStyle=color;
 	canvasContext.fillText(txt,x,y);
 }
 
@@ -80,7 +80,7 @@ var connectedKeyEvents = new Array();
 
 // key event code reference
 function KeyCodeReference() {
-	this.ZERO = 48;
+	this.ZERO = 48; // probably not the same codes for the numpad
 	this.ONE = 49;
 	this.TWO = 50;
 	this.THREE = 51;
