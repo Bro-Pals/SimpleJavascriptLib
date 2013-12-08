@@ -1,4 +1,3 @@
-// ~100 line physics code is super simple!
 
 var blockArray = new Array(); // an array to hold all the blocks
 
@@ -14,7 +13,7 @@ function updateBlocks() {
  * width and height are the block's size
  */
 var Block=Block;
-function Block(_x, _y, _width, _height) {
+function Block(_x, _y, _width, _height, _falling) {
 	// add the block to the blockArray
 	blockArray[(blockArray.length)] = this;
 	// the cubes's basic values
@@ -22,7 +21,7 @@ function Block(_x, _y, _width, _height) {
 	this.y = _y;
 	this.width = _width;
 	this.height = _height;
-	this.falling = false;
+	this.falling = _falling;
 	
 	// [x, y] velocity and acceleration
 	this.velocity = [0, 0];
@@ -53,10 +52,10 @@ function Block(_x, _y, _width, _height) {
 	// Later: Make it check for collisions
 	this.update=update;
 	function update() {
-		if (!falling) {
+		if (!this.falling) {
 			return;
 		}
-		
+		this.acceleration[1] = 2;
 		// check for collisions with other blocks
 		for (var i=0; i<blockArray.length; i++) {
 			if (blockArray[i]!=this) {
@@ -94,6 +93,7 @@ function Block(_x, _y, _width, _height) {
 		// update the position with acceleration
 		this.x = this.x+this.velocity[0];
 		this.y = this.y+this.velocity[1];
+		
 	}
 	
 	/* see if the block will collide with the other block if

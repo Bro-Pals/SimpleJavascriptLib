@@ -11,9 +11,9 @@
 	</style>
 </head>
 
-<body onload="derp()">
+<body>
 
-<canvas width="640" height="480" id="joe">
+<canvas width="640" height="480" id="joe" onclick="clickedCanvas(event)">
 	There should be a canvas here
 </canvas>
 
@@ -24,48 +24,7 @@
 <script src="../SimpleLibrary/setup.js"></script>
 <script src="../SimpleLibrary/physics.js"></script>
 
-<script>
-
-var testBlock;
-var block2;
-
-var scale = 10;
-
-// the first method ran
-function derp() {
-	setCanvasInfo("joe", 640, 480, "2d");
-	
-	loadImage("level", "testLevel.gif");
-	//drawImage("level", 0, 0);
-	
-	var imgd = getImageDataArray("level", 40, 40);
-	
-	document.getElementById("show").innerHTML = "Hello!";
-	
-	var xOn = 0;
-	var yOn = 0;
-	var numOn = 0;
-	for (var i=0; i<imgd.length; i=i+4) {
-		if (numOn >= 40) {
-			yOn++;
-			xOn=0;
-		}
-		if ((imgd[i]==0) && (imgd[(i+1)]==0) && (imgd[(i+2)]==0)) {
-			var newBlock = new Block(xOn*scale, yOn*scale, scale, scale);
-		}
-		
-		xOn++;
-		numOn++;
-		
-	}
-	
-	updateBlocks();
-}
-
-// event listeners
-document.addEventListener('keydown',pressKey,false);
-
-</script>
+<script src="testScript.js"></script>
 
 </body>
 
