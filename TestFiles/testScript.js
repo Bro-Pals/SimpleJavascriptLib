@@ -9,10 +9,14 @@ function derp() {
 	setInterval(function() {
 		updateBlocks();
 		fillBackground("#FFFFFF");
+		var borderSize = 2;
 		for (var i=0; i<blockArray.length; i++) {
 			drawBlock(blockArray[i], "#000000");
+			drawBox(blockArray[i].x+borderSize, blockArray[i].y+borderSize,
+					blockArray[i].width-(2*borderSize), blockArray[i].height-(2*borderSize),
+					"#CCCCCC");
 		}
-	}, 80);
+	}, 40);
 }
 
 var fallThis = true;

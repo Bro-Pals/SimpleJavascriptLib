@@ -86,6 +86,50 @@ function Block(_x, _y, _width, _height, _falling) {
 			}
 		}
 		
+		// check and move intersecting blocks
+		for (var i=0; i<blockArray.length; i++) {
+			if (blockArray[i]!=this) {
+				// check the Y axis 
+				if (this.willIntersectsY(blockArray[i])) {
+					if (this.isIntersecting(blockArray[i], 0, -1)) {
+						var ytran=0;
+						var finalTrans = 0;
+						var newSpotFound = false;
+						while (!newSpotFound) {
+							ytran++;
+							if (!this.isIntersecting(blockArray[i], 0, ytran)) {
+								finalTrans = ytran;
+								break;
+							} else if (!this.isIntersecting(blockArray[i], 0, -ytran)) {
+								finalTrans = -ytran;
+								break;
+							}
+						}
+						this.y = this.y + finalTrans;
+					}
+				}
+				// check the X axis
+				if (this.willIntersectsX(blockArray[i])) {
+					if (this.isIntersecting(blockArray[i], 0, 0)) {
+						var xtran=0;
+						var finalTrans = 0;
+						var newSpotFound = false;
+						while (!newSpotFound) {
+							xtran++;
+							if (!this.isIntersecting(blockArray[i], xtran, 0)) {
+								finalTrans = xtran;
+								break;
+							} else if (!this.isIntersecting(blockArray[i], -xtran, 0)) {
+								finalTrans = -xtran;
+								break;
+							}
+						}
+						this.x = this.x + finalTrans;
+					}
+				}
+			}
+		}
+		
 		// update the velocity with acceleration
 		this.velocity = [this.velocity[0]+this.acceleration[0],
 						 this.velocity[1]+this.acceleration[1]];
@@ -114,5 +158,16 @@ function Block(_x, _y, _width, _height, _falling) {
 			(otherBlock.x < this.x+this.width) && 
 			(otherBlock.y+otherBlock.height > this.y+this.velocity[1]) && 
 			(otherBlock.y < this.y+this.height+this.velocity[1]));
+	}
+	
+	/* Just check if this block is intersecting another block
+	 * After translating this block by a certain number*/
+	this.isIntersecting=isIntersecting;
+	function isIntersecting(otherBlock, _xMod, _yMod) {
+		var buffer = 1;
+		return ((otherBlock.x+otherBlock.width > _xMod+this.x) &&
+			(otherBlock.x < _xMod+this.x+this.width) &&
+			(otherBlock.y+otherBlock.height > _yMod+this.y) && 
+			(otherBlock.y < _yMod+this.y+this.height));
 	}
 }
