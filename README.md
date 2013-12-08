@@ -1,4 +1,5 @@
 SimpleJavascriptLib
 ===================
 
-We're going to be learning more about making games in Javascript by creating a small, simple library for it!
+Learning more about Javascript while making a small
+library for ourselves so we can make HTML5 games easier.
