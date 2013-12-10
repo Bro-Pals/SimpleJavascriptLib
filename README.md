@@ -10,6 +10,8 @@ other stuff that I might typically do when making games (mostly for gamejams)
 
 #Using the Canvas Drawing
 
+These are things found in ```setup.js```
+
 There is a quick function to call for setting up the canvas you're drawing to, then several other functions for shorthand versions of things I find myself drawing a lot.
 
 ```js
@@ -24,6 +26,8 @@ There is a quick function to call for setting up the canvas you're drawing to, t
 ```
 
 #Key Events
+
+All the events are found in ```events.js```
 
 You can also connect functions to events fairly easily. For connecting a function to a key press is fairly simple.
 
