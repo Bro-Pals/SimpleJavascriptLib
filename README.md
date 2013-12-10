@@ -8,18 +8,22 @@ Right now I mostly use it to make drawing to a canvas very fast and easy. I woul
 like to make it so I can do stuff like read image data, get sprites froms spritesheets, and
 other stuff that I might typically do when making games (mostly for gamejams)
 
-#Using
+#Using the Canvas Drawing
 
-There is a quick function to call for setting up the canvas you're drawing to.
+There is a quick function to call for setting up the canvas you're drawing to, then several other functions for shorthand versions of things I find myself drawing a lot.
 
 ```js
   // (CanvasID, the canvas width, height, and the context type)
   setCanvasInfo("joe", canvasWidth, canvasHeight, "2d");
+  
+  // things can now be drawn with variuous draw functions
+  drawImage("ImageID", 40, 50); // (ImageId, x, y)
+  drawText("Hello World!", "Arial 14px", "#FF0000", 100, 150) // (Messages, Font, Color, x, y)
+  drawBox(30, 50, 100, 100, "#00FF00") // (x, y, width, height, Color)
+  fillBackground("#FFFFFF") // filles the entire canvas with a Color
 ```
 
-Additional functions, found in setup.js, can then be called as shorthands for drawing boxes, text, images, and backgrounds.
-
-There is also a ```Block``` object that can be created with simple physics. However the physics are kind of messed up right now.
+#Key Events
 
 You can also connect functions to events fairly easily. For connecting a function to a key press is fairly simple.
 
@@ -38,6 +42,8 @@ If you don't want to keep looking up all the keycodes, there is also a table of 
   // instead of looking up the keycode for the a key it's already in a table!
   connectKeyEvent(keyCodeRef.A, moveLeft);
 ```
+
+#Canvas-Clicked events
 
 Additionally, click events can be added relatively easily (not that it was already simple). Unfortunately, it only works with one canvas at a time. :(
 
