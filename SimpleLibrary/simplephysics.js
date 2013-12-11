@@ -1,7 +1,4 @@
 
-// This physics prevents clipping of blocks, but the collision behaves very strangely
-// use simplephysics.js will have less strange physics
-
 var blockArray = new Array(); // an array to hold all the blocks
 
 // update all the blocks in the blockArray
@@ -51,8 +48,6 @@ function Block(_x, _y, _width, _height, _falling) {
 		this.acceleration[1]=_y;
 	}
 	
-	var buffer = 0.6; // buffer for collisions
-	
 	// update the velocity and position of the cube
 	// Later: Make it check for collisions
 	this.update=update;
@@ -61,82 +56,53 @@ function Block(_x, _y, _width, _height, _falling) {
 			return;
 		}
 		this.acceleration[1] = 2; // gravity
+		
+		// update the velocity with acceleration
+		this.velocity = [this.velocity[0]+this.acceleration[0],
+						 this.velocity[1]+this.acceleration[1]];
+		
 		// check for collisions with other blocks
 		for (var i=0; i<blockArray.length; i++) {
 			if (blockArray[i]!=this) {
 				// check the X axis
+				collisions = 0;
 				if (this.willIntersectsX(blockArray[i])) {
-					if ((this.velocity[0] > 0) && // if it was moving right
-					    (this.x+this.width+this.velocity[0] > blockArray[i].x)) {
-							this.x = blockArray[i].x-this.width-buffer;
-						} else if ((this.velocity[0] < 0) && // if it was moving left
-					    (this.x+this.velocity[0] < blockArray[i].x+blockArray[i].width)) {
-							this.x = blockArray[i].x+blockArray[i].width+buffer;
-						}
+					if (this.velocity[0] > 0 &&
+						(this.x+this.width+this.velocity[0] > blockArray[i].x)) {
+						this.x = blockArray[i].x-this.width;
+					}
+					if (this.velocity[0] < 0 &&
+						(this.x+this.velocity[0] < blockArray[i].x+blockArray[i].width)) {
+						this.x = blockArray[i].x+blockArray[i].width;
+					}
 					this.acceleration[0] = 0;
 					this.velocity[0] = 0;
 				}
 				// check the Y axis 
 				if (this.willIntersectsY(blockArray[i])) {
-					if ((this.velocity[1] > 0) && // if it was moving down
-					    (this.y+this.height+this.velocity[1] > blockArray[i].y)) {
-							this.y = blockArray[i].y-this.height-buffer;
-						} else if ((this.velocity[1] < 0) && // if it was moving up
-					    (this.y+this.velocity[1] < blockArray[i].y+blockArray[i].height)) {
-							this.y = blockArray[i].y+blockArray[i].height+buffer;
-						}
+					if (this.velocity[1] > 0 && 
+						(this.y+this.height+this.velocity[1] > blockArray[i].y)) {
+						this.y = blockArray[i].y-this.height;
+					}
+					if (this.velocity[1] < 0 && 
+						(this.y+this.velocity[1] < blockArray[i].y+blockArray[i].height)) {
+						this.y = blockArray[i].y+blockArray[i].height;
+					}
 					this.acceleration[1] = 0;
 					this.velocity[1] = 0;
 				}
 			}
 		}
 		
-		// check and move intersecting blocks
-		var clippingBlocks = 0;
-		do {
-			clippingBlocks = 0;
-			for (var i=0; i<blockArray.length; i++) {
-				if (blockArray[i]!=this) {
-					// check the Y axis 
-					if (this.isIntersecting(blockArray[i], 0, 0)) {
-						clippingBlocks++;
-						var ytran=0;
-						var finalTrans = 0;
-						var newSpotFound = false;
-						while (!newSpotFound) {
-							ytran++;
-							if (!this.isIntersecting(blockArray[i], 0, ytran)) {
-								finalTrans = ytran + buffer;
-								break;
-							} else if (!this.isIntersecting(blockArray[i], 0, -ytran)) {
-								finalTrans = -ytran - buffer;
-								break;
-							}
-						}
-						this.y = this.y + finalTrans;
-
-						var xtran=0;
-						var finalTrans = 0;
-						var newSpotFound = false;
-						while (!newSpotFound) {
-							xtran++;
-							if (!this.isIntersecting(blockArray[i], xtran, 0)) {
-								finalTrans = xtran + buffer;
-								break;
-							} else if (!this.isIntersecting(blockArray[i], -xtran, 0)) {
-								finalTrans = -xtran - buffer;
-								break;
-							}
-						}
-						this.x = this.x + finalTrans;
-					}
-				}
+		if (this.velocity[1] == 0) {
+			if (this.velocity[0] > 1) {
+				this.velocity[0] = this.velocity[0] - 1;
+			} else if (this.velocity[0] < -1) {
+				this.velocity[0] = this.velocity[0] + 1;
+			} else {
+				this.velocity[0] = 0;
 			}
-		} while(clippingBlocks > 0); 
-		
-		// update the velocity with acceleration
-		this.velocity = [this.velocity[0]+this.acceleration[0],
-						 this.velocity[1]+this.acceleration[1]];
+		}
 		
 		// update the position with acceleration
 		this.x = this.x+this.velocity[0];
@@ -168,7 +134,6 @@ function Block(_x, _y, _width, _height, _falling) {
 	 * After translating this block by a certain number*/
 	this.isIntersecting=isIntersecting;
 	function isIntersecting(otherBlock, _xMod, _yMod) {
-		var buffer = 1;
 		return ((otherBlock.x+otherBlock.width > _xMod+this.x) &&
 			(otherBlock.x < _xMod+this.x+this.width) &&
 			(otherBlock.y+otherBlock.height > _yMod+this.y) && 
