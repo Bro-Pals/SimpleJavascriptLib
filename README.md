@@ -8,6 +8,8 @@ Right now I mostly use it to make drawing to a canvas very fast and easy. I woul
 like to make it so I can do stuff like read image data, get sprites froms spritesheets, and
 other stuff that I might typically do when making games (mostly for gamejams)
 
+The ```physics.js``` is horribly broken right now, and I've reproduced the less-broken form of it in ```simplephysics.js```, so if I were you I would use the latter because I still suck at physics code. :P
+
 #Using the Canvas Drawing
 
 These are things found in ```setup.js```
