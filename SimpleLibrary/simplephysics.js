@@ -1,4 +1,3 @@
-
 var blockArray = new Array(); // an array to hold all the blocks
 
 // update all the blocks in the blockArray
@@ -67,11 +66,10 @@ function Block(_x, _y, _width, _height, _falling) {
 				// check the X axis
 				collisions = 0;
 				if (this.willIntersectsX(blockArray[i])) {
-					if (this.velocity[0] > 0 &&
+					if (//this.velocity[0] > 0 &&
 						(this.x+this.width+this.velocity[0] > blockArray[i].x)) {
 						this.x = blockArray[i].x-this.width;
-					}
-					if (this.velocity[0] < 0 &&
+					} else if (//this.velocity[0] < 0 &&
 						(this.x+this.velocity[0] < blockArray[i].x+blockArray[i].width)) {
 						this.x = blockArray[i].x+blockArray[i].width;
 					}
@@ -80,11 +78,10 @@ function Block(_x, _y, _width, _height, _falling) {
 				}
 				// check the Y axis 
 				if (this.willIntersectsY(blockArray[i])) {
-					if (this.velocity[1] > 0 && 
+					if (//this.velocity[1] > 0 && 
 						(this.y+this.height+this.velocity[1] > blockArray[i].y)) {
 						this.y = blockArray[i].y-this.height;
-					}
-					if (this.velocity[1] < 0 && 
+					} else if (//this.velocity[1] < 0 && 
 						(this.y+this.velocity[1] < blockArray[i].y+blockArray[i].height)) {
 						this.y = blockArray[i].y+blockArray[i].height;
 					}
