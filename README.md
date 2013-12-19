@@ -57,7 +57,10 @@ Additionally, click events can be added relatively easily (not that it was alrea
   // Set the canvas that is being clicked
   setClickCanvas("joe"); // joe is the id of the canvas
   
-  addCanvasMouseDown(function(event) {
+  // event: The event
+  // x: The x position of the mouse on the canvas
+  // y: the y position of the mouse on the canvas
+  addCanvasMouseDown(function(event, x, y) {
       // stuff
     });
 ```
