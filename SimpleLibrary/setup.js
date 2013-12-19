@@ -41,6 +41,18 @@ function fillBackground(color) {
 	drawBox(0, 0, canvasSizeX, canvasSizeY, color);
 }
 
+function playAudio(audioId) {
+	var sound = document.getElementById(audioID);
+	sound.currentTime = 0;
+	sound.play();
+}
+
+function playAudio(audioId, startTime) {
+	var sound = document.getElementById(audioID);
+	sound.currentTime = startTime;
+	sound.play();
+}
+
 function drawImage(id, x, y) {
 	var img=document.getElementById(id);
 	canvasContext.drawImage(img,x,y);

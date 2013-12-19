@@ -56,6 +56,9 @@ function connectKeyEvent(theKeyCode, functionAssigned) {
 	connectedKeyEvents[lastIndex] = [theKeyCode, functionAssigned];
 }
 
+var eventCanvas;
+var canvasRect;
+
 var mouseDownEvents = new Array();
 var mouseUpEvents = new Array();
 
@@ -71,21 +74,26 @@ function addCanvasMouseUp(func) {
 // Calls all the onmouseup events for the canvas
 function canvasMouseUp(event) {
 	for (var i=0; i<mouseUpEvents.length; i++) {
-		mouseUpEvents[i](event);
+		var x = event.clientX - canvasRect.left;
+		var y = event.clientY - canvasRect.top;
+		mouseUpEvents[i](event, x, y);
 	}
 }
 
 // Calls all the onmousedown events for the canvas
 function canvasMouseDown(event) {
 	for (var i=0; i<mouseDownEvents.length; i++) {
-		mouseDownEvents[i](event);
+		var x = event.clientX - canvasRect.left;
+		var y = event.clientY - canvasRect.top;
+		mouseDownEvents[i](event, x, y);
 	}
 }
 
 function setClickCanvas(idOfCanvas) {
-	var eventCanvas = document.getElementById(idOfCanvas);
+	eventCanvas = document.getElementById(idOfCanvas);
 	eventCanvas.onmouseup = canvasMouseUp;
 	eventCanvas.onmousedown = canvasMouseDown;
+	canvasRect = eventCanvas.getBoundingClientRect();
 }
 
 // event listener for pressing keys

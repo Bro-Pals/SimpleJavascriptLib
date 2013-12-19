@@ -91,6 +91,9 @@ function Block(_x, _y, _width, _height, _falling) {
 					this.acceleration[1] = 0;
 					this.velocity[1] = 0;
 				}
+				if (this.isIntersecting(blockArray[i], 0, 0)) {
+					this.y = this.y - 1;
+				}
 			}
 		}
 		
