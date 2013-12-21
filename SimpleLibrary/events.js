@@ -39,6 +39,13 @@ function KeyCodeReference() {
 	this.X = 88;
 	this.Y = 89;
 	this.Z = 90;
+	this.ESCAPE = 27
+	this.SHIFT = 16;
+	this.ARROW_LEFT = 37;
+	this.ARROW_UP = 38;
+	this.ARROW_RIGHT = 39;
+	this.ARRAY_DOWN = 40;
+	this.SPACEBAR = 32;
 }
 var keyCodeRef = new KeyCodeReference();
 
