@@ -140,3 +140,14 @@ function Block(_x, _y, _width, _height, _falling) {
 			(otherBlock.y < _yMod+this.y+this.height));
 	}
 }
+
+/* Shorthand for checking collision between two rectangles, without
+ * creating any Block objects
+ */
+function isColliding(_x1, _y1, _width1, _height1, _x2, _y2, _width2, _height2) {
+	return ((_x2 + _width2 > _x1) &&
+			(_x2 < _width1 + _x1) &&
+			(_y2 + _height2 > _y1) &&
+			(_y2 < _height1 + _y1));
+}
+
