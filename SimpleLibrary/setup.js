@@ -42,14 +42,22 @@ function fillBackground(color) {
 }
 
 function playAudio(audioId) {
-	var sound = document.getElementById(audioID);
+	var sound = document.getElementById(audioId);
 	sound.currentTime = 0;
 	sound.play();
 }
 
-function playAudio(audioId, startTime) {
-	var sound = document.getElementById(audioID);
+function playAudioVolume(audioId, _volume) {
+	var sound = document.getElementById(audioId);
+	sound.currentTime = 0;
+	sound.volume = _volume;
+	sound.play();
+}
+
+function playAudioVolumStartTime(audioId, _volume, startTime) {
+	var sound = document.getElementById(audioId);
 	sound.currentTime = startTime;
+	sound.volume = _volume;
 	sound.play();
 }
 
