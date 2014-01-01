@@ -66,3 +66,12 @@ Additionally, click events can be added relatively easily (not that it was alrea
 ```
 
 While the code is probably extremely amatuer it's something for myself and others to use in gamejams or personal projects.
+
+#Copy-Paste for inclusion in a .html
+```js
+<script src="SimpleLibrary\setup.js"></script>
+<script src="SimpleLibrary\simplephysics.js"></script>
+<script src="SimpleLibrary\events.js"></script>
+<script src="SimpleLibrary\gui.js"></script>
+<script src="SimpleLibrary\sprites.js"></script>
+```
