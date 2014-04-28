@@ -49,9 +49,10 @@ function ToggleButton(_x, _y, _width, _height, _imageIDup, _imageIDdown, _whatHa
 	}
 }
 
+// canvasRect comes from setup.js
 function checkButtonClicks(event) {
-	var x = event.clientX;
-	var y = event.clientY;
+	var x = event.clientX - canvasRect.left;
+	var y = event.clientY - canvasRect.top;
 	
 	for (var i=0; i<buttonsArray.length; i++) {
 		if (x > buttonsArray[i].x && x < buttonsArray[i].x + buttonsArray[i].width &&
