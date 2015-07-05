@@ -13,6 +13,7 @@
 	
 */
 
+/*
 // the active screen that is being ran
 var activeScreen = null;
 
@@ -115,7 +116,7 @@ function drawImage(id, x, y) {
 /* This creates a <img> element on the html page.
    One way you can avoid calling this function is by
    putting in all the <img> tags right into the page itself
-*/
+*
 function loadImage(imageID, imageSource) {
 	var newImg = document.createElement("img");
 	newImg.id = imageID;
@@ -141,5 +142,5 @@ function drawText(txt,font,color, x,y) {
 	canvasContext.fillStyle=color;
 	canvasContext.fillText(txt,x,y);
 }
-
+*/
  
