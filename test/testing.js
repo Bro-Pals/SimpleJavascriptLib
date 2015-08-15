@@ -65,8 +65,12 @@ var tests = [
 		
 		api.addListener("invalid type", function meh(){});
 		
-		api.addListener("mousedown", function leftMouse(x, y) {
-			console.log(x, y);
+		api.addListener("mousedown", function downMouse(x, y) {
+			console.log("Mouse down" + x + ", " + y);
+		});
+		
+		api.addListener("mouseup", function upMouse(x, y) {
+			console.log("Mouse up" + x + ", " + y);
 		});
 
 	}
