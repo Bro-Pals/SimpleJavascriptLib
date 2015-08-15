@@ -5,6 +5,10 @@ function createBroPalsAPI() {
 	var context;
 	var canvasWidth;
 	var canvasHeight;
+	var looping = false;
+	var start;
+	var diff;
+	var waitBetweenFrames = 1000/40; // 40 fps default
 	
 	/*
 	 * The types of assets that can be stored
@@ -13,6 +17,15 @@ function createBroPalsAPI() {
 		images : {},
 		sounds : {}
 	};
+	
+	/*
+	 * An object to store references to screens
+	 */
+	var screens = {};
+	/*
+	 * The active screen. Initially undefined
+	 */
+	var activeScreen;
 	
 	/*
 	 * All of the events that there can be listeners for
@@ -282,7 +295,73 @@ function createBroPalsAPI() {
 	}
 	/**/
 	
+	/**
+	 * Define a screen to use in the API. Screens are not cleared when you switch the canvas.
+	 * _key - The key to reference the screen with.
+	 * _screen - An object containing functions for the screen. It should have at least 3
+	 * 			 functions: start, update, and render. update takes one argument for how
+	 *			 many milliseconds has passed that frame.
+	 */
+	function defineScreen(_key, _screen) {
+		if (_key in screens) {
+			console.error("BropalsJSLib: A screen with the key '" + _key + "'" +
+				" is already defined");
+			return;
+		}
+		Object.defineProperty(screens, _key, {
+			value : _screen,
+			enumerable : false,
+		});
+	}
+	
+	/**
+	 * Set the screen with the given key as the active screen. Automatically calls 
+     * the screen's 'start' function.
+	 * _key - The key of the screen.
+	 */
+	function setScreen(_key) {
+		activeScreen = screens[_key];
+		activeScreen.start();
+	}
 
+	/**
+	 * Set the loop's frames (cycles) per second.
+	 */
+	function setFps(_fps) {
+		waitBetweenFrames = 1000/_fps;
+	}
+	
+	/**
+	 * Starts the game loop.
+	 */
+	function loop() {
+		if (looping) {
+			console.error("BropalsJSLib: Called 'loop' when already looping");
+			return;
+		}
+		if (!activeScreen) {
+			console.error("BropalsJSLib: The activeScreen has not been defined yet");
+			return;
+		}
+		loopActiveScreen();
+	}
+	
+	/* Loops through the active screen */
+	function loopActiveScreen() {
+		var frameActiveScreen = activeScreen; // in case it changes mid-frame
+		start = (new Date()).getTime();
+		frameActiveScreen.update(waitBetweenFrames);
+		
+		frameActiveScreen.render();
+		
+		diff = (new Date()).getTime() - start;
+		if (waitBetweenFrames - diff > 0) {
+			setTimeout(loopActiveScreen, waitBetweenFrames - diff);
+		} else {
+			loopActiveScreen();
+		}
+	}
+	
 	return {
 		setCanvasInfo : setCanvasInfo,
 		drawRect : drawRect,
@@ -299,5 +378,9 @@ function createBroPalsAPI() {
 		readyToPlay : readyToPlay,
 		readyToDraw : readyToDraw,
 		addListener : addListener,
+		defineScreen : defineScreen,
+		setScreen : setScreen,
+		setFps : setFps,
+		loop : loop
 	};
 }

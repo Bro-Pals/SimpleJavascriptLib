@@ -63,16 +63,44 @@ var tests = [
 		var api = createBroPalsAPI();
 		api.setCanvasInfo("joe", "2d");
 		
-		api.addListener("invalid type", function meh(){});
+		// should cause an error
+		//api.addListener("invalid type", function meh(){});
 		
 		api.addListener("mousedown", function downMouse(x, y) {
-			console.log("Mouse down" + x + ", " + y);
+			console.log("Mouse down " + x + ", " + y);
 		});
 		
 		api.addListener("mouseup", function upMouse(x, y) {
-			console.log("Mouse up" + x + ", " + y);
+			console.log("Mouse up " + x + ", " + y);
 		});
 
+	},
+	function testScreensAndUpdating() {
+		var api = createBroPalsAPI();
+		
+		api.setFps(40);
+		
+		api.defineScreen("game", {
+			
+			x : 0,
+			
+			start : function start() {
+				api.setCanvasInfo("joe", "2d");
+				this.x = 0;
+			},
+			update : function update(_ms) {
+				this.x = this.x + 1;
+				//console.log("update: " + _ms);
+			},
+			render : function render() {
+				api.fillBackgroundSolidColor("#999999");
+				api.drawRect(this.x, 100, 50, 50, "#ff0000");
+				//console.log("render");
+			}
+		});
+		
+		api.setScreen("game");
+		api.loop();
 	}
 ];
 
