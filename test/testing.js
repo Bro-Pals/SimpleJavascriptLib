@@ -79,13 +79,14 @@ var tests = [
 		var api = createBroPalsAPI();
 		
 		api.setFps(40);
+		api.setCanvasInfo("joe", "2d");
 		
 		api.defineScreen("game", {
 			
 			x : 0,
 			
 			start : function start() {
-				api.setCanvasInfo("joe", "2d");
+				
 				this.x = 0;
 			},
 			update : function update(_ms) {
@@ -101,6 +102,16 @@ var tests = [
 		
 		api.setScreen("game");
 		api.loop();
+	},
+	function testKeyEvent() {
+		var api = createBroPalsAPI();
+		api.setCanvasInfo("joe", "2d");
+		
+		api.addListener("keydown", function keyDown(code) {
+			if (code == api.KeyCode.W) {
+				console.log("W was pressed");
+			}
+		});		
 	}
 ];
 

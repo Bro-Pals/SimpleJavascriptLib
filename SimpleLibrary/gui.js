@@ -1,4 +1,4 @@
-
+/*
 var buttonsArray = new Array();
 
 var SimpleButton=SimpleButton;
@@ -68,3 +68,5 @@ addCanvasMouseDown(checkButtonClicks);
 function clearButtons() {
 	buttonsArray = new Array();
 }
+*/
+

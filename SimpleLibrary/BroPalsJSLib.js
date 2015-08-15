@@ -42,7 +42,8 @@ function createBroPalsAPI() {
 		 * The listener function will have two arguments, x and y, for 
 		 * the position where the mouse is in the canvas.
 		 */
-		mouseup : []
+		mouseup : [],
+		keydown: []
 	};
 	
 	/**
@@ -60,15 +61,22 @@ function createBroPalsAPI() {
 			// clear listeners on a new canvas
 			listeners["mousedown"] = [];
 			listeners["mouseup"] = [];
+			listeners["keydown"] = [];
 			
 			// remove all events from the old canvas
-			canvas.removeEventListener('mousedown',handleMouseDown,false);
-			canvas.removeEventListener('mouseup',handleMouseUp,false);
+			canvas.removeEventListener('mousedown',handleMouseDown, false);
+			canvas.removeEventListener('mouseup',handleMouseUp, false);
+			canvas.removeEventListener('keydown',handleKeyDown, false);
 		}
 		
 		setCanvas = true;
-		canvas.addEventListener('mousedown',handleMouseDown,false);
-		canvas.addEventListener('mouseup',handleMouseUp,false);
+		canvas.addEventListener('mousedown',handleMouseDown, false);
+		canvas.addEventListener('mouseup',handleMouseUp, false);
+		canvas.addEventListener('keydown',handleKeyDown, false);
+		
+		/* canvas focus http://www.dbp-consulting.com/tutorials/canvas/CanvasKeyEvents.html */
+		canvas.setAttribute('tabindex','0');
+		canvas.focus();
 	}
 	
 	/**
@@ -293,6 +301,59 @@ function createBroPalsAPI() {
 			listeners["mouseup"][i](_e.clientX, _e.clientY);
 		}
 	}
+	
+	var KeyCode = {
+		ZERO : 48, // probably not the same codes for the numpad
+		ONE : 49,
+		TWO : 50,
+		THREE : 51,
+		FOUR : 52,
+		FIVE : 53,
+		SIX : 54,
+		SEVEN : 55,
+		EIGHT : 56,
+		NINE : 57,
+		A : 65,
+		B : 66,
+		C : 67,
+		D : 68,
+		E : 69,
+		F : 70,
+		G : 71,
+		H : 72,
+		I : 73,
+		J : 74,
+		K : 75,
+		L : 76,
+		M : 77,
+		N : 78,
+		O : 79,
+		P : 80,
+		Q : 81,
+		R : 82,
+		S : 83,
+		T : 84,
+		U : 85,
+		V : 86,
+		W : 87,
+		X : 88,
+		Y : 89,
+		Z : 90,
+		ESCAPE : 27,
+		SHIFT : 16,
+		ARROW_LEFT : 37,
+		ARROW_UP : 38,
+		ARROW_RIGHT: 39,
+		ARRAY_DOWN : 40,
+		SPACEBAR : 32
+	};
+	
+	function handleKeyDown(_e) {
+		var e = _e ? _e : window.event;
+		for (var i in (listeners["keydown"])) {
+			listeners["keydown"][i](e.keyCode);
+		}
+	}
 	/**/
 	
 	/**
@@ -343,6 +404,10 @@ function createBroPalsAPI() {
 			console.error("BropalsJSLib: The activeScreen has not been defined yet");
 			return;
 		}
+		if (!setCanvas) {
+			console.error("BroPalsJSLib: No canvas has been set yet");
+			return;
+		}
 		loopActiveScreen();
 	}
 	
@@ -381,6 +446,7 @@ function createBroPalsAPI() {
 		defineScreen : defineScreen,
 		setScreen : setScreen,
 		setFps : setFps,
-		loop : loop
+		loop : loop,
+		KeyCode : KeyCode
 	};
 }

@@ -1,4 +1,4 @@
-
+/*
 var particleArray = new Array();
 
 var Particle=Particle;
@@ -29,3 +29,4 @@ function updateParticles() {
 		}
 	}
 }
+*/

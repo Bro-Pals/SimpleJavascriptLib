@@ -1,4 +1,4 @@
-
+/*
 var blockArray = new Array(); // an array to hold all the blocks
 
 // update all the blocks in the blockArray
@@ -12,6 +12,7 @@ function updateBlocks() {
  * x and y are for position of the block
  * width and height are the block's size
  */
+ /*
 var Block=Block;
 function Block(_x, _y, _width, _height, _falling) {
 	// add the block to the blockArray
@@ -118,3 +119,5 @@ function Block(_x, _y, _width, _height, _falling) {
 		}
 	}
 }
+*/
+

@@ -1,4 +1,4 @@
-
+/*
 var connectedKeyEvents = new Array();
 
 // key event code reference
@@ -105,4 +105,6 @@ function setClickCanvas(idOfCanvas) {
 
 // event listener for pressing keys
 document.addEventListener('keydown',pressKey,false);
+ */
+ 
  
