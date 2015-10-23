@@ -3,7 +3,10 @@
 
 console.log(document.URL);
 
+var api;
+
 var tests = [
+	/*
 	function testMakeApi() {
 		var api = null;
 		api = createBroPalsAPI();
@@ -112,12 +115,174 @@ var tests = [
 				console.log("W was pressed");
 			}
 		});		
+	},
+	*/
+	/*
+	function testMakingColorButton() {
+		api = createBroPalsAPI();
+		
+		api.addButton("button1", {
+			color : "#FF0033"
+		});
+		api.addButton("button2", {
+			colordown : "#0099FF"
+		});
+		api.addButton("button3", {
+			colorup : "#FF33FF"
+		});
+		api.addButton("button4", {
+			colorup : "#000000",
+			colordown : "#FFFFFF"
+		});
+	},
+	function testMakingButtonThatUpDown() {
+		api = createBroPalsAPI();
+		
+		api.addButton("testClick", {
+			enabled : true,
+			colorhover : "#1818CC",
+			colordown : "#000099",
+			colorup : "#3333FF",
+			ondown : function ondown() {
+				console.log("Woah bro this happened");
+			},
+			onup : function onup() {
+				console.log("released!");
+			}
+		});
+		
+		api.setCanvasInfo("joe", "2d");
+		api.defineScreen("game", {start : function start() {}, 
+			update : function update(_ms) {}, 
+			render : function render() {} });
+		api.setScreen("game");
+		api.loop();
+	},
+	function testMakingButtonClicks() {
+		api = createBroPalsAPI();
+		
+		api.addButton("testSimpleButton", {
+			enabled : true,
+			color : "#33FF33",
+			x : 200,
+			y : 200,
+			onclick : function onclick() {
+				console.log("This was acctually clicked and stuff");
+			}
+		});	
+		
+		//api.addButton("testSimpleButton", {});
+		
+		api.setCanvasInfo("joe", "2d");
+		api.defineScreen("game", {start : function start() {}, 
+			update : function update(_ms) {}, 
+			render : function render() {} });
+		api.setScreen("game");
+		api.loop();
+	},
+	function testButtonWithImages() {
+		// TODO: when I feel like it
+	},
+	function testUsingSprites() {
+		api = createBroPalsAPI();
+		
+		api.loadImage("testSprite", "img/testSprite.png");
+		
+		setTimeout(function drawImages() {
+			if (api.readyToDraw("testSprite")) {
+				console.log("Sprite image ready!");
+			}
+			api.addSprite("testSpriteThing", {
+				enabled : true,
+				x : 100,
+				y : 100,
+				deltax : 1,
+				deltay : 2,
+				imagekey : "testSprite"
+			});
+			api.addSprite("anotherThing", {
+				enabled : true,
+				x : 10,
+				y : 200,
+				deltax : 1,
+				deltay : -0.4,
+				color : "#ff0000"
+			});
+			
+			api.setCanvasInfo("joe", "2d");
+			api.defineScreen("game", {start : function start() {}, 
+				update : function update(_ms) {}, 
+				render : function render() {} });
+			api.setScreen("game");
+			api.loop();
+		}, 100);
+		
+	},
+	*/
+	function testPhysicsBlocks() {
+	
+		// maybe make groups of blocks?
+		api = createBroPalsAPI();
+		
+		api.addPhysicsRectangle("player", {
+			enabled : true,
+			anchored : false,
+			collidable : true,
+			x : 20,
+			y : 100,
+			width : 100,
+			height : 100,
+			velx : -0.5,
+			vely : 0.2,
+			accx : 0,
+			accy : 0,
+			update : function update(ms) {
+				console.log("player was updated");
+			},
+			oncollide : function oncollide(other) {
+				console.log("This block has collided with another block")
+			},
+			color : "#cc00cc",
+			borderColor : "#990099",
+			borderSize : 4
+		});
+		api.modifyPhysicsRectangle("player", { velx : 2 });
+		
+		api.addPhysicsRectangle("", {
+			enabled : true,
+			anchored : true,
+			x : 260,
+			y : 10,
+			width : 50,
+			height : 300,
+			borderColor : "#cccccc",
+			borderSize : 3
+		});
+		/*
+		api.addPhysicsRectangle("", {
+			enabled : true,
+			anchored : true,
+			x : 160,
+			y : 10,
+			width : 100,
+			height : 40,
+			borderColor : "#cccccc",
+			borderSize : 3
+		});
+		*/
+		api.setCanvasInfo("joe", "2d");
+			api.defineScreen("game", {start : function start() {}, 
+				update : function update(_ms) {}, 
+				render : function render() {} });
+			api.setScreen("game");
+			api.loop();
 	}
+	
 ];
 
 
 
-
+// run all the tests
 for (var i=0; i<tests.length; i++) {
 	console.log(tests[i]);
 	tests[i]();
