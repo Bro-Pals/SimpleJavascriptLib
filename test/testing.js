@@ -110,14 +110,12 @@ var tests = [
 		var api = createBroPalsAPI();
 		api.setCanvasInfo("joe", "2d");
 		
-		api.addListener("keydown", function keyDown(code) {
-			if (code == api.KeyCode.W) {
+		api.addListener("event", function keyDown(code, released) {
+			if (!released && code == api.KeyCode.W) {
 				console.log("W was pressed");
 			}
 		});		
 	},
-	*/
-	/*
 	function testMakingColorButton() {
 		api = createBroPalsAPI();
 		
@@ -223,6 +221,7 @@ var tests = [
 	
 		// maybe make groups of blocks?
 		api = createBroPalsAPI();
+		api.setCanvasInfo("joe");
 		
 		api.addPhysicsRectangle("player", {
 			enabled : true,
@@ -258,7 +257,7 @@ var tests = [
 			borderColor : "#cccccc",
 			borderSize : 3
 		});
-		/*
+		
 		api.addPhysicsRectangle("", {
 			enabled : true,
 			anchored : true,
@@ -269,7 +268,18 @@ var tests = [
 			borderColor : "#cccccc",
 			borderSize : 3
 		});
-		*/
+		
+		api.addPhysicsRectangle("", {
+			enabled : true,
+			anchored : true,
+			x : 80,
+			y : 30,
+			width : 60,
+			height : 40,
+			borderColor : "#cccccc",
+			borderSize : 3
+		});
+		
 		api.setCanvasInfo("joe", "2d");
 			api.defineScreen("game", {start : function start() {}, 
 				update : function update(_ms) {}, 
@@ -281,10 +291,11 @@ var tests = [
 ];
 
 
-
-// run all the tests
-for (var i=0; i<tests.length; i++) {
-	console.log(tests[i]);
-	tests[i]();
-}
+setTimeout(function runTests() {
+	// run all the tests
+	for (var i=0; i<tests.length; i++) {
+		console.log(tests[i]);
+		tests[i]();
+	}
+}, 200);
 

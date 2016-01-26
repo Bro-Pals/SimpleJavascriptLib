@@ -43,6 +43,8 @@ function createBroPalsAPI() {
 	 * The physics rectangles.
 	 */
 	var rectangles = {};
+	rectangles["default"] = {}; // default rectangle group
+	var nextDefaultRectKey = 0;
 	var physicsRectangleProperties = ["x", "y", "velx", "vely", "accx", "accy",
 			"width", "height", "enabled", "anchored", "collidable", "update", 
 			"oncollide", "color", "borderColor", "borderSize"];
@@ -72,12 +74,21 @@ function createBroPalsAPI() {
 		 */
 		mouseup : [],
 		/*
-		 * The keydown event occurs when a key is pressed. 
+		 * The keyevent occurs when a key is pressed or released. 
 		 * The active canvas has to be focused for it to
 		 * to fire.
 		 */
-		keydown: []
+		keyevent: [],
 	};
+	
+	/*
+	 * Functions that are called at an interval.
+	 * Each element has three things:
+	 * currTime - How much time is being counted right now.
+	 * maxTime - How long each interval is. Can be a function.
+	 * func - The function to call
+	 */
+	var intervalFunctions = [];
 	
 	/**
 	 * Set the canvas to be used by the API.
@@ -85,8 +96,14 @@ function createBroPalsAPI() {
 	 * _contextType - The type of context to draw with (such as '2d')
 	 */
 	function setCanvasInfo(_id, _contextType) {
+		var contextType;
+		if (!_contextType) {
+			contextType = "2d"; // default context
+		} else {
+			contextType = _contextType;
+		}
 		var canvas = document.getElementById(_id);
-		context = canvas.getContext(_contextType);
+		context = canvas.getContext(contextType);
 		canvasWidth = canvas.width;
 		canvasHeight = canvas.height;
 		
@@ -100,18 +117,20 @@ function createBroPalsAPI() {
 			canvas.removeEventListener('mousedown',handleMouseDown, false);
 			canvas.removeEventListener('mouseup',handleMouseUp, false);
 			canvas.removeEventListener('keydown',handleKeyDown, false);
+			canvas.removeEventListener('keyup',handleKeyUp, false);
 			canvas.removeEventListener('mousemove',handleMouseMove, false);
 		}
 		
-		setCanvas = true;
 		canvas.addEventListener('mousedown',handleMouseDown, false);
 		canvas.addEventListener('mouseup',handleMouseUp, false);
 		canvas.addEventListener('keydown',handleKeyDown, false);
+		canvas.addEventListener('keyup',handleKeyUp, false);
 		canvas.addEventListener('mousemove',handleMouseMove, false);
 		
 		/* canvas focus http://www.dbp-consulting.com/tutorials/canvas/CanvasKeyEvents.html */
 		canvas.setAttribute('tabindex','0');
 		canvas.focus();
+		setCanvas = true;
 	}
 	
 	/**
@@ -165,7 +184,7 @@ function createBroPalsAPI() {
 	 * _key - The key used to reference the image.
 	 */
 	function readyToDraw(_key) {
-		return assets.images[_key] && assets.images[_key].complete;
+		return context && assets.images[_key] && assets.images[_key].complete;
 	}
 	
 	/**
@@ -203,6 +222,30 @@ function createBroPalsAPI() {
 			return;
 		}
 		context.drawImage(assets.images[_key], _x, _y, _w, _h);
+	}
+	
+	/**
+	 * Draw an image to the canvas, scaling it.
+	 * _key - The key used to reference the image.
+	 * _x, _y - The x and y position to draw the image at.
+	 * _r - the angle in radians to rotate the image
+	 */
+	function drawImageRotated(_key, _x, _y, _r) {
+		if (!setCanvas) {
+			console.error("BroPalsJSLib: No canvas has been set yet");
+			return;
+		}
+		if (!readyToDraw(_key)) {
+			console.error("BropalsJSLib: The image with the " + _key + " has not " +
+				"finished loading yet; make a delay after loading before drawing");
+			return;
+		}
+		var imgR = assets.images[_key]
+		context.translate(_x+(imgR.width/2), _y+(imgR.height/2));
+		context.rotate(_r);
+		context.drawImage(imgR, -(imgR.width/2), -(imgR.height/2));
+		context.rotate(-_r);
+		context.translate(-_x-(imgR.width/2), -_y-(imgR.height/2));
 	}
 	
 	/**
@@ -260,11 +303,13 @@ function createBroPalsAPI() {
 	 * _key - The key used to reference the audio file.
 	 */
 	function playAudio(_key) {
+		/*
 		if (!readyToPlay(_key)) {
 			console.error("BropalsJSLib: The audio with the " + _key + " has not " +
 				"finished loading yet; make a delay after loading before playing");
 			return;
 		}
+		*/
 		assets.sounds[_key].currentTime = 0;
 		assets.sounds[_key].play();
 	}
@@ -421,10 +466,20 @@ function createBroPalsAPI() {
 	
 	function handleKeyDown(_e) {
 		var e = _e ? _e : window.event;
-		for (var i in (listeners["keydown"])) {
-			listeners["keydown"][i](e.keyCode);
+		handleKeyEvent(e.keyCode, false);
+	}
+	
+	function handleKeyUp(_e) {
+		var e = _e ? _e : window.event;
+		handleKeyEvent(e.keyCode, true);
+	}
+	
+	function handleKeyEvent(code, _released) {
+		for (var i in (listeners["keyevent"])) {
+			listeners["keyevent"][i](code, _released);
 		}
 	}
+	
 	/**/
 	
 	/**
@@ -483,6 +538,30 @@ function createBroPalsAPI() {
 	}
 	
 	function updateAll(_ms, _activeScreen) {
+		
+		// update and call interval functions
+		for (var i=0; i<intervalFunctions.length; i++) {
+			var intFunc = intervalFunctions[i];
+			var timeUp = false;
+			// check if maxTime is a function
+			if ((typeof intFunc.maxTime) == "function") {
+				// don't end time if the intFunction returns a 0.
+				if (intFunc.maxTime() < 0) {
+					timeUp = false;
+				} else {
+					timeUp = intFunc.maxTime() < intFunc.currTime;
+					intFunc.currTime = intFunc.currTime + _ms;
+				}
+			} else {
+				timeUp = intFunc.maxTime < intFunc.currTime;
+				intFunc.currTime = intFunc.currTime + _ms;
+			}
+			if (timeUp) {
+				intFunc.func();
+				intFunc.currTime = 0;
+			}
+		}
+		
 		// update all the enabled gui buttons
 		for (var key in (buttons.simple)) {
 			var button = buttons.simple[key];
@@ -505,58 +584,73 @@ function createBroPalsAPI() {
 		}
 		
 		// update all of the rectangles
-		for (var key in rectangles) {
-			var rect = rectangles[key];
-			
-			// update the velocity with acceleration
-			rect.velx += rect.accx; 
-			rect.vely += rect.accy;
-			
-			rect.x += rect.velx;
-			rect.y += rect.vely;
-			
-			// check for collisions with other blocks
-			if (!rect.anchored) {
-				for (var key2 in rectangles) {
-					var other = rectangles[key2];
-					if (!rect.anchored && other != rect /* block is in animated */) {
-						var smallestMaxX = rect.x + rect.width > other.x + other.width ? 
-							other.x + other.width : rect.x + rect.width;
-						var largestMinX = rect.x < other.x ? other.x : rect.x;
-						
-						var smallestMaxY = rect.y + rect.height > other.y + other.height ? 
-							other.y + other.height : rect.y + rect.height;
-						var largestMinY = rect.y < other.y ? other.y : rect.y;
-						
-						var xPen = largestMinX - smallestMaxX;
-						var yPen = largestMinY - smallestMaxY;
-						
-						//if (!this.grounded) this.blockOn = null;
-						
-						if (xPen < 0 && yPen < 0) {
-							if (Math.abs(yPen) < Math.abs(xPen)) {
-								if (rect.y > other.y) {
-									rect.y = other.y + other.height;
-								} else {
-									rect.y = other.y - rect.height;
-									//this.grounded = true; // lands on the ground
-									//this.blockOn = blockArray[i];
+		for (var groupKey in rectangles) {
+			var rectGroup = rectangles[groupKey]
+			for (var key in rectGroup) {
+				var rect = rectGroup[key];
+				
+				// update the velocity with acceleration
+				rect.velx += rect.accx; 
+				rect.vely += rect.accy;
+				
+				rect.x += rect.velx;
+				rect.y += rect.vely;
+				
+				// check for collisions with other blocks
+				if (!rect.anchored) {
+					for (var groupKey2 in rectangles) {
+						var rectGroup2 = rectangles[groupKey2];
+						for (var key2 in rectGroup2) {
+							var other = rectGroup2[key2];
+							if (!rect.anchored && other != rect /* block is in animated */) {
+								
+								var smallestMaxX = rect.x + rect.width > other.x + other.width ? 
+									other.x + other.width : rect.x + rect.width;
+								var largestMinX = rect.x < other.x ? other.x : rect.x;
+								
+								var smallestMaxY = rect.y + rect.height > other.y + other.height ? 
+									other.y + other.height : rect.y + rect.height;
+								var largestMinY = rect.y < other.y ? other.y : rect.y;
+								
+								var xPen = largestMinX - smallestMaxX;
+								var yPen = largestMinY - smallestMaxY;
+								
+								//if (!this.grounded) this.blockOn = null;
+								
+								if (xPen < 0 && yPen < 0) {
+									if (Math.abs(yPen) < Math.abs(xPen)) {
+										if (rect.y > other.y) {
+											rect.y = other.y + other.height;
+										} else {
+											rect.y = other.y - rect.height;
+											//this.grounded = true; // lands on the ground
+											//this.blockOn = blockArray[i];
+										}
+										rect.vely = 0;
+									} else {
+										if (rect.x > other.x) {
+											rect.x = other.x + other.width;
+										} else {
+											rect.x = other.x - rect.width;
+										}
+										rect.velx = 0;
+									}
+									
+									if ((rect.collidable || other.collidable) && rect.oncollide) {
+										rect.oncollide(other);
+									}
 								}
-								rect.vely = 0;
-							} else {
-								if (rect.x > other.x) {
-									rect.x = other.x + other.width;
-								} else {
-									rect.x = other.x - rect.width;
-								}
-								rect.velx = 0;
+								
 							}
 						}
 					}
 				}
+		
+				// update the specific update function
+				if (rect.update) {
+					rect.update(_ms);
+				}
 			}
-		
-		
 		}
 		// end update rectangles
 		
@@ -623,31 +717,34 @@ function createBroPalsAPI() {
 		}
 		
 		// render the rectangles
-		for (var key in rectangles) {
-			var rect = rectangles[key];
-			if (rect.enabled) {
-				if (rect.image) {  // TODO: Add image
-					//console.log("OMG AN IMAGE!!!");
-					//drawImage(sprite.imagekey, sprite.x, sprite.y);
-				} else {
-					var xRender = rect.x;
-					var yRender = rect.y;
-					var widthRender = rect.width;
-					var heightRender = rect.height
-					if ("borderColor" in rect) {
-						// draw the border
+		for (var groupKey in rectangles) {
+			var rectGroup = rectangles[groupKey];
+			for (var key in rectGroup) {
+				var rect = rectGroup[key];
+				if (rect.enabled) {
+					if (rect.image) {  // TODO: Add image
+						//console.log("OMG AN IMAGE!!!");
+						//drawImage(sprite.imagekey, sprite.x, sprite.y);
+					} else {
+						var xRender = rect.x;
+						var yRender = rect.y;
+						var widthRender = rect.width;
+						var heightRender = rect.height
+						if ("borderColor" in rect) {
+							// draw the border
+							drawRect(xRender, yRender, 
+								widthRender, heightRender, 
+								rect.borderColor);
+							// adjust values for drawing inside
+							xRender += rect.borderSize;
+							yRender += rect.borderSize;
+							widthRender -= (rect.borderSize * 2);
+							heightRender -= (rect.borderSize * 2);
+						}
 						drawRect(xRender, yRender, 
 							widthRender, heightRender, 
-							rect.borderColor);
-						// adjust values for drawing inside
-						xRender += rect.borderSize;
-						yRender += rect.borderSize;
-						widthRender -= (rect.borderSize * 2);
-						heightRender -= (rect.borderSize * 2);
+							rect.color);
 					}
-					drawRect(xRender, yRender, 
-						widthRender, heightRender, 
-						rect.color);
 				}
 			}
 		}
@@ -895,8 +992,19 @@ function createBroPalsAPI() {
 	 * borderColor : String - The color of the border of the rectangle (default none)
 	 * borderSize : Number - The width of the border. (default 1)
 	 */
-	function addPhysicsRectangle(_key, _props) {
-		if (_key != "" && _key in rectangles) { // multiple empty string rectangles can be added
+	function addPhysicsRectangle(_key, _props, _groupKey) {
+		var grp;
+		if (!_groupKey || _groupKey == "") {
+			grp = "default";
+		} else {
+			grp = _groupKey;
+		}
+		if (!(grp in rectangles)) {
+				console.log("Created a new physics rectangle group with the group key "
+				+ grp);
+				rectangles[grp] = {};
+		}
+		if (_key != "" && _key in rectangles[grp]) { // multiple empty string rectangles can be added
 			console.error("BroPalsJSLib: A physics rectangle with the key " + _key + " already exists");
 			return;
 		}
@@ -932,27 +1040,44 @@ function createBroPalsAPI() {
 			}
 		}
 		
+		var rectKey = _key;
+		
+		// make the key be the next index instead if the key doesn't matter
+		if (_key == "") {
+			rectKey = nextDefaultRectKey++;
+		}
 		
 		// add the rect
-		Object.defineProperty(rectangles, _key, {
+		Object.defineProperty(rectangles[grp], rectKey, {
 			value : rect,
 			enumerable : true,
 		});
 		return rect;
 	}
 	
+	
 	/**
 	 * Modify a physics rectangle with the given key. The properties 
 	 * that will be modified are the properties in the given object.
 	 */
-	function modifyPhysicsRectangle(_key, _modprops) {
-		if (!(_key in rectangles)) {
+	function modifyPhysicsRectangle(_key, _modprops, _groupKey) {
+		var grp;
+		if (!_groupKey || _groupKey == "") {
+			grp = "default";
+		} else {
+			grp = _groupKey;
+		}
+		if (!(grp in rectangles)) {
+				console.error("Could not find physics rectangle group with the key \""
+				+ grp + "\"");
+		}
+		if (!(_key in rectangles[grp])) {
 			console.error("BroPalsJSLib: Can't modify any rectangles with the key " + _key + 
 				": no rectangle found with the given key");
 			return;
 		}
 		
-		var rect = rectangles[_key];
+		var rect = rectangles[grp][_key];
 		 
 		for (var i=0; i<physicsRectangleProperties.length; i++) {
 			if (physicsRectangleProperties[i] in _modprops) {
@@ -971,7 +1096,23 @@ function createBroPalsAPI() {
 	/**
 	 * Removes all of the physics rectangle using the given key
 	 */
-	function removePhysicsRectangles(_key) {
+	function removePhysicsRectangles(_key, _groupKey) {
+		
+	}
+	
+	/**
+	 * Modify a group of physics rectangles using the given group key.
+	 * The properties that will be modified are the properties in the
+	 * given object.
+	 */
+	function modifyPhysicsRectangleGroup(_groupKey, _modProps) {
+		
+	}
+	
+	/**
+	 * Removes all of the physics rectangle in the group of the given key
+	 */
+	function removePhysicsRectangleGroup(_groupKey) {
 		
 	}
 	
@@ -984,6 +1125,24 @@ function createBroPalsAPI() {
 	}
 	
 	
+	/**
+	 * Have a function be called every defined amount of time.
+	 * _ms - milliseconds between each call. This can be a function.
+	 * _f - The function to be called
+	 */
+	function defineIntervalFunction(_ms, _f) {
+		// an array of inteval functions.
+			// each element has 1. max time, 2. current time, 3. function
+			// update each one every frame (using the _ms parameter)
+			// if the time is greater than max time, call the function
+		var intervalObj = {
+			currTime : 0,
+			maxTime : _ms,
+			func : _f
+		}		
+		intervalFunctions.push(intervalObj);
+	}
+	
 	
 	return {
 		setCanvasInfo : setCanvasInfo,
@@ -992,6 +1151,7 @@ function createBroPalsAPI() {
 		loadImage : loadImage,
 		drawImage : drawImage,
 		drawImageScaled : drawImageScaled,
+		drawImageRotated : drawImageRotated,
 		setFont : setFont,
 		drawText : drawText,
 		loadAudio : loadAudio,
@@ -1009,6 +1169,7 @@ function createBroPalsAPI() {
 		addButton : addButton,
 		addSprite : addSprite,
 		addPhysicsRectangle : addPhysicsRectangle,
-		modifyPhysicsRectangle : modifyPhysicsRectangle
+		modifyPhysicsRectangle : modifyPhysicsRectangle,
+		defineIntervalFunction : defineIntervalFunction
 	};
 }
