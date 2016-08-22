@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Test Page</title>
+	<script src="gamethings.js"></script>
+	<script type="x-shader/x-vertex" id="vertexShader1">
+		attribute vec2 loc;
+	
+		void main() {
+			gl_Position = vec4(loc, 0.0, 1.0);
+		}
+	</script>
+	<script type="x-shader/x-fragment" id="fragmentShader1">
+		void main() {
+			gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+		}
+	</script>
+</head>
+<body onload="go()">
+	<canvas id="can" width="400" height="300"></canvas>
+	<script>
+		function initState() {
+			var vertexShader = loadShader("vertexShader1", gl.VERTEX_SHADER);
+			var fragShader = loadShader("fragmentShader1", gl.FRAGMENT_SHADER);
+			var program = makeProgram(vertexShader, fragShader);
+			//Don't forget to delete shaders when you are done with them
+			gl.deleteShader(vertexShader);
+			gl.deleteShader(fragShader);
+			
+			gl.useProgram(program);
+			
+			
+		}
+		function update(_diff) {
+			
+		}
+		function render(_diff) {
+			
+		}
+		function keyInput(_pressed, _keycode) {
+			
+		}
+		function go() {
+			GameManager.setCanvas("can", "webgl");
+			GameManager.createState(
+				"state1",
+				initState,
+				update,
+				render,
+				{ 
+					key : keyInput
+				} 
+			);
+			GameManager.setState("state1");
+			GameManager.loop();
+		}
+	</script>
+</body>
