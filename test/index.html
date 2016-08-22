@@ -1,16 +1,81 @@
 <!DOCTYPE html>
 <html>
+<meta charsset="UTF-8">
 <head>
-	<meta charset="UTF-8">
+  <style>
+    /*
+    body {
+      margin: 0em;
+      padding: 0em;
+      width: 100%;
+    }
+    body, html {
+      height: 100%;
+    }
+    canvas {
+      margin: 0em;
+      margin-bottom: -5px;
+      padding: 0em;
+      border-width: 0em;
+      width: 100%;
+      height: 100%;
+      position: center top;
+    }
+    */
+  </style>
 </head>
-
 <body>
 
-	<canvas id="joe" width="400" height="300"> </canvas>
+<canvas id="joe" width="800" height="600">No canvas supported.</canvas>
 
-	<script src="../SimpleLibrary/BroPalsJSLib.js"></script>
-	<script src="testing.js"></script>
-	
+<!--Following tutorial from https://www.khronos.org/webgl/wiki/Tutorial -->
+<!-- Library files from tutorial
+<script src="https://github.com/KhronosGroup/WebGL/blob/master/sdk/demos/common/webgl-utils.js"></script>
+<script src="https://github.com/KhronosGroup/WebGL/blob/master/sdk/demos/webkit/resources/J3DIMath.js"></script>
+<script src="https://github.com/KhronosGroup/WebGL/blob/master/sdk/demos/webkit/resources/J3DI.js"></script>
+-->
+
+<!--Vertex shader-->
+<script id="vshader" type="x-shader/x-vertex">
+  uniform mat4 u_modelViewProjMatrix;
+  uniform mat4 u_normalMatrix;
+  uniform vec3 lightDir;
+
+  attribute vec3 vNormal;
+  attribute vec4 vTexCoord;
+  attribute vec4 vPosition;
+
+  varying float v_Dot;
+  varying vec2 v_texCoord;
+
+  void main()
+  {
+      gl_Position = u_modelViewProjMatrix * vPosition;
+      v_texCoord = vTexCoord.st;
+      vec4 transNormal = u_normalMatrix * vec4(vNormal, 1);
+      v_Dot = max(dot(transNormal.xyz, lightDir), 0.0);
+  }
+</script>
+<!--Fragment shader-->
+<script id="fshader" type="x-shader/x-fragment">
+   precision mediump float;
+
+   uniform sampler2D sampler2d;
+
+   varying float v_Dot;
+   varying vec2 v_texCoord;
+
+   void main()
+   {
+       vec2 texCoord = vec2(v_texCoord.s, 1.0 - v_texCoord.t);
+       vec4 color = texture2D(sampler2d, texCoord);
+       color += vec4(0.1, 0.1, 0.1, 1);
+       gl_FragColor = vec4(color.xyz * v_Dot, color.a);
+   }
+</script>
+
+<script src="../lib/gamethings.js"></script>
+<script src="../lib/main.js"></script>
+
 </body>
-
 </html>
