@@ -2,10 +2,12 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>Test Page</title>
+	<!--The type is set to 'example' so that it is not compiled as javascript.-->
+	<script src="test.obj" type="example" id="testObjFile1"></script>
 	<script src="gamethings.js"></script>
 	<script type="x-shader/x-vertex" id="vertexShader1">
 		attribute vec2 loc;
-	
+
 		void main() {
 			gl_Position = vec4(loc, 0.0, 1.0);
 		}
@@ -19,26 +21,49 @@
 <body onload="go()">
 	<canvas id="can" width="400" height="300"></canvas>
 	<script>
+    var locAttrLocation;
+    var vertexBuffer;
+    var elementBuffer;
+		var meshData;
 		function initState() {
-			var vertexShader = loadShader("vertexShader1", gl.VERTEX_SHADER);
-			var fragShader = loadShader("fragmentShader1", gl.FRAGMENT_SHADER);
-			var program = makeProgram(vertexShader, fragShader);
-			//Don't forget to delete shaders when you are done with them
-			gl.deleteShader(vertexShader);
-			gl.deleteShader(fragShader);
-			
+			program = makeProgramWithShaderIds("vertexShader1", "fragmentShader1");
+      // attributes locations
+      locAttrLocation = gl.getAttribLocation(program, "loc");
+      // dont need to save the uniform locations because there are none.
 			gl.useProgram(program);
-			
-			
+
+			meshData = loadMeshData("testObjFile1");
+
+      // initilzize a buffer thing
+      vertexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+      gl.bufferData(gl.ARRAY_BUFFER, meshData.array, gl.STATIC_DRAW);
+      elementBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, meshData.index, gl.STATIC_DRAW);
+
+      // specify how the attributes are setup
+      gl.vertexAttribPointer(
+            locAttrLocation,
+            3,
+            gl.FLOAT,
+            false,
+            Float32Array.BYTE,
+            0
+            );
+      gl.enableVertexAttribArray(locAttrLocation);
 		}
 		function update(_diff) {
-			
+
 		}
 		function render(_diff) {
-			
+      gl.clearColor(0.9, 0.9, 0.9, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.drawElements(gl.TRIANGLES, meshData.arrayLength, gl.UNSIGNED_BYTE, 0);
 		}
 		function keyInput(_pressed, _keycode) {
-			
+
 		}
 		function go() {
 			GameManager.setCanvas("can", "webgl");
@@ -47,9 +72,9 @@
 				initState,
 				update,
 				render,
-				{ 
+				{
 					key : keyInput
-				} 
+				}
 			);
 			GameManager.setState("state1");
 			GameManager.loop();
