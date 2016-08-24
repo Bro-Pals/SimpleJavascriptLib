@@ -8,7 +8,7 @@
 		attribute vec3 loc;
 
 		void main() {
-			gl_Position = vec4(loc.x, loc.y, 0.0, 1.0);
+			gl_Position = vec4(loc, 1.0);
 		}
 	</script>
 	<script type="x-shader/x-fragment" id="fragmentShader1">
@@ -69,13 +69,6 @@
 			gl.useProgram(program);
 
 			meshData = loadMeshData("testObjFile1");
-
-			console.log("Array is length " + meshData.array.length + "");
-			for (var i = 0; i < meshData.array.length; i++) {
-				console.log(
-					meshData.array[0] + ", " + meshData.array[1] + ", " + meshData.array[2]
-				);
-			}
 			
 		    // initilzize a buffer thing
 		    vertexBuffer = gl.createBuffer();
@@ -92,7 +85,7 @@
 				3,
 				gl.FLOAT,
 				false,
-				Float32Array.BYTES_PER_ELEMENT * 5,
+				Float32Array.BYTES_PER_ELEMENT * 3,
 				0
 				);
 		  gl.enableVertexAttribArray(locAttrLocation);
@@ -103,7 +96,7 @@
 		function render(_diff) {
 			gl.clearColor(0.9, 0.9, 0.9, 1.0);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			gl.drawElements(gl.TRIANGLES, meshData.arrayLength, gl.UNSIGNED_BYTE, 0);
+			gl.drawElements(gl.TRIANGLES, meshData.arrayLength/3, gl.UNSIGNED_BYTE, 0);
 		}
 		function keyInput(_pressed, _keycode) {
 
