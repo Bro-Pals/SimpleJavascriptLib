@@ -12,7 +12,7 @@
 		}
 	</script>
 	<script type="x-shader/x-fragment" id="fragmentShader1">
-	
+
 		void main() {
 			gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 		}
@@ -61,6 +61,8 @@
     var vertexBuffer;
     var elementBuffer;
 		var meshData;
+
+		var soundThing;
 		function initState() {
 			program = makeProgramWithShaderIds("vertexShader1", "fragmentShader1");
 		    // attributes locations
@@ -76,7 +78,7 @@
 					meshData.array[0] + ", " + meshData.array[1] + ", " + meshData.array[2]
 				);
 			}
-			
+
 		    // initilzize a buffer thing
 		    vertexBuffer = gl.createBuffer();
 		    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -85,7 +87,7 @@
 		    elementBuffer = gl.createBuffer();
 		    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
 	   	    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, meshData.index, gl.STATIC_DRAW);
- 
+
 		    // specify how the attributes are setup
 		    gl.vertexAttribPointer(
 				locAttrLocation,
@@ -96,6 +98,9 @@
 				0
 				);
 		  gl.enableVertexAttribArray(locAttrLocation);
+
+			GameManager.loadAudio("blip", "Blip_Select.wav");
+
 		}
 		function update(_diff) {
 
@@ -106,7 +111,11 @@
 			gl.drawElements(gl.TRIANGLES, meshData.arrayLength, gl.UNSIGNED_BYTE, 0);
 		}
 		function keyInput(_pressed, _keycode) {
-
+			console.log(_pressed, _keycode);
+			if (_pressed && _keycode == 65) {
+				GameManager.playAudio("blip");
+				console.log("PLAY");
+			}
 		}
 		function go() {
 			GameManager.setCanvas("can", "webgl");
